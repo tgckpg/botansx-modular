@@ -70,10 +70,10 @@ const rLocale = function( lang, stack )
 	}
 	catch( e )
 	{
-		Dragonfly.Warning( e );
+		Dragonfly.Warning( e.message );
 	}
 
-	return Zone + "." + stack[1];
+	return Zone + "." + stack[0];
 };
 
 String.prototype.L = function( ...args )
