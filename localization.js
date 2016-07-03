@@ -14,10 +14,13 @@ const ProxyLocale = function( name, _locale, _parent )
 				case Symbol.toPrimitive:
 					return () => _locale( global.lang || "en-US" );
 
+				case "name":
+					return _parent ? `${_parent.name}.${name}` : name;
+
 				case "inspect":
 					return _parent
-						? () => `LocaleString[ ${_parent}.${name} ]`
-						: () => `LocaleString[ ${name} ]`
+						? () => `LocaleString[ Locale${_parent.name}.${name} ]`
+						: () => `LocaleString`
 						;
 			}
 
@@ -29,11 +32,11 @@ const ProxyLocale = function( name, _locale, _parent )
 					{
 						if( !stack )
 						{
-							stack = stack || [ prop, "" ];
+							stack = stack || [ prop, name ];
 						}
 						else
 						{
-							stack[1] = stack[1] + "." + prop;
+							stack[1] = name + "." + stack[1];
 						}
 
 						return _locale( lang, stack );
@@ -51,7 +54,7 @@ const ProxyLocale = function( name, _locale, _parent )
 
 const rLocale = function( lang, stack )
 {
-	var Zone =  "LocaleSX." + lang + stack[1];
+	var Zone = "LocaleSX." + lang + stack[1];
 
 	try
 	{
@@ -70,7 +73,7 @@ const rLocale = function( lang, stack )
 		Dragonfly.Warning( e );
 	}
 
-	return Zone + "." + stack[0];
+	return Zone + "." + stack[1];
 };
 
 String.prototype.L = function( ...args )
