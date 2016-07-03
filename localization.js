@@ -85,12 +85,24 @@ String.prototype.L = function( ...args )
 	var a = 0;
 	while( ~( j = this.indexOf( "%s", i ) ) )
 	{
-		i = j + 2;
+		// handle %% => % literal
+		if( this[ j - 1 ] == "%" )
+		{
+			// How many % in a row?
+			var nump = -1;
+			while( this[ j + ( -- nump ) ] == "%" );
 
-		// %% => % literal
-		if( this[ j - 1 ] == "%" ) continue;
+			// If number of percent is even, this %s is escaped
+			if( nump % 2 == 0 )
+			{
+				i ++;
+				continue;
+			}
+		}
 
 		str += this.substring( i, j ) + args[ a ++ ];
+
+		i = j + 2;
 	}
 
 	if( str == "" ) return this.replace( "%%", "%" );
