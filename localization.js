@@ -73,4 +73,27 @@ const rLocale = function( lang, stack )
 	return Zone + "." + stack[0];
 };
 
+String.prototype.L = function( ...args )
+{
+	var i = 0;
+	var j = -1;
+	var str = "";
+
+	var a = 0;
+	while( ~( j = this.indexOf( "%s", i ) ) )
+	{
+		i = j + 2;
+
+		// %% => % literal
+		if( this[ j - 1 ] == "%" ) continue;
+
+		str += this.substring( i, j ) + args[ a ++ ];
+	}
+
+	if( str == "" ) return this.replace( "%%", "%" );
+	else str += this.substring( i, this.length );
+
+	return str;
+};
+
 module.exports = ProxyLocale( "", rLocale );

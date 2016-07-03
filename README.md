@@ -35,3 +35,10 @@ module.exports = {
     "ERROR1": " 錯誤訊息 1"
 };
 ```
+
+### Templated String
+`String.L`
+```javascript
+"%s world".L( "hello" ); // hello world
+"%%s world".L( "hello" ); // %s world
+```
